@@ -42,16 +42,16 @@ pub extern "C" fn _start() -> ! {
 
     for y in 0..HEIGHT {
         for x in 0..WIDTH {
-            let point = Complex {
-                real: x as f64 / WIDTH as f64 * 3.5 - 2.5,
-                imag: y as f64 / HEIGHT as f64 * 2.0 - 1.0,
-            };
+            let point = Complex::new(
+                x as f64 / WIDTH as f64 * 3.5 - 2.5,
+                y as f64 / HEIGHT as f64 * 2.0 - 1.0,
+            );
             let i = mandelbrot(point);
             if i == MAX_ITER {
                 print!(" ");
             } else {
                 WRITER.lock().write_string_color(
-                    "*",
+                    "@",
                     vga_buffer::ColorCode::new(
                         COLOR_PALETTE[i % COLOR_PALETTE.len()],
                         vga_buffer::Color::Black,
