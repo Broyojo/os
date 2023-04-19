@@ -5,6 +5,8 @@ mod vga_buffer;
 
 use core::panic::PanicInfo;
 
+use crate::vga_buffer::WRITER;
+
 #[panic_handler]
 fn panic(info: &PanicInfo) -> ! {
     println!("{info}");
@@ -13,9 +15,27 @@ fn panic(info: &PanicInfo) -> ! {
 
 #[no_mangle]
 pub extern "C" fn _start() -> ! {
-    // display mandelbrot set
     const WIDTH: i32 = 80;
     const HEIGHT: i32 = 24;
+
+    const COLOR_PALETTE: [vga_buffer::Color; 16] = [
+        vga_buffer::Color::Black,
+        vga_buffer::Color::Blue,
+        vga_buffer::Color::Green,
+        vga_buffer::Color::Cyan,
+        vga_buffer::Color::Red,
+        vga_buffer::Color::Magenta,
+        vga_buffer::Color::Brown,
+        vga_buffer::Color::LightGray,
+        vga_buffer::Color::DarkGray,
+        vga_buffer::Color::LightBlue,
+        vga_buffer::Color::LightGreen,
+        vga_buffer::Color::LightCyan,
+        vga_buffer::Color::LightRed,
+        vga_buffer::Color::Pink,
+        vga_buffer::Color::Yellow,
+        vga_buffer::Color::White,
+    ];
 
     for y in 0..HEIGHT {
         for x in 0..WIDTH {
@@ -27,10 +47,16 @@ pub extern "C" fn _start() -> ! {
             if i == MAX_ITER {
                 print!(" ");
             } else {
-                print!("*");
+                WRITER.lock().write_string_color(
+                    "*",
+                    vga_buffer::ColorCode::new(
+                        COLOR_PALETTE[i % COLOR_PALETTE.len()],
+                        vga_buffer::Color::Black,
+                    ),
+                )
             }
         }
-        println!("");
+        println!();
     }
 
     panic!("End of _start reached");
