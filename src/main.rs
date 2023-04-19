@@ -50,8 +50,8 @@ pub extern "C" fn _start() -> ! {
             if i == MAX_ITER {
                 print!(" ");
             } else {
-                WRITER.lock().write_string_color(
-                    "#",
+                WRITER.lock().write_byte_color(
+                    b'#',
                     ColorCode::new(COLOR_PALETTE[i % COLOR_PALETTE.len()], Color::Black),
                 );
             }
