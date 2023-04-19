@@ -51,7 +51,7 @@ pub extern "C" fn _start() -> ! {
                 print!(" ");
             } else {
                 WRITER.lock().write_string_color(
-                    "@",
+                    "#",
                     vga_buffer::ColorCode::new(
                         COLOR_PALETTE[i % COLOR_PALETTE.len()],
                         vga_buffer::Color::Black,
