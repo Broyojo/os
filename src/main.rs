@@ -8,8 +8,6 @@ use core::{
     panic::PanicInfo,
 };
 
-use crate::vga_buffer::WRITER;
-
 #[panic_handler]
 fn panic(info: &PanicInfo) -> ! {
     println!("{info}");
@@ -18,26 +16,28 @@ fn panic(info: &PanicInfo) -> ! {
 
 #[no_mangle]
 pub extern "C" fn _start() -> ! {
+    use vga_buffer::{Color, ColorCode, WRITER};
+
     const WIDTH: i32 = 80;
     const HEIGHT: i32 = 24;
 
-    const COLOR_PALETTE: [vga_buffer::Color; 16] = [
-        vga_buffer::Color::Black,
-        vga_buffer::Color::Blue,
-        vga_buffer::Color::LightBlue,
-        vga_buffer::Color::Cyan,
-        vga_buffer::Color::LightCyan,
-        vga_buffer::Color::Green,
-        vga_buffer::Color::LightGreen,
-        vga_buffer::Color::Brown,
-        vga_buffer::Color::Yellow,
-        vga_buffer::Color::DarkGray,
-        vga_buffer::Color::LightGray,
-        vga_buffer::Color::Magenta,
-        vga_buffer::Color::Pink,
-        vga_buffer::Color::LightRed,
-        vga_buffer::Color::Red,
-        vga_buffer::Color::White,
+    const COLOR_PALETTE: [Color; 16] = [
+        Color::Black,
+        Color::Blue,
+        Color::LightBlue,
+        Color::Cyan,
+        Color::LightCyan,
+        Color::Green,
+        Color::LightGreen,
+        Color::Brown,
+        Color::Yellow,
+        Color::DarkGray,
+        Color::LightGray,
+        Color::Magenta,
+        Color::Pink,
+        Color::LightRed,
+        Color::Red,
+        Color::White,
     ];
 
     for y in 0..HEIGHT {
@@ -52,11 +52,8 @@ pub extern "C" fn _start() -> ! {
             } else {
                 WRITER.lock().write_string_color(
                     "#",
-                    vga_buffer::ColorCode::new(
-                        COLOR_PALETTE[i % COLOR_PALETTE.len()],
-                        vga_buffer::Color::Black,
-                    ),
-                )
+                    ColorCode::new(COLOR_PALETTE[i % COLOR_PALETTE.len()], Color::Black),
+                );
             }
         }
         println!();
